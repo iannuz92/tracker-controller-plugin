@@ -82,7 +82,7 @@ build_framework_simple() {
     # Try to build just the framework without complex dependencies
     xcodebuild \
         -project "${PROJECT_NAME}.xcodeproj" \
-        -target "TrackerControllerFramework" \
+        -scheme "TrackerControllerFramework" \
         -configuration "$CONFIGURATION" \
         -destination "generic/platform=$PLATFORM" \
         -derivedDataPath "$BUILD_DIR/DerivedData" \

@@ -1,0 +1,68 @@
+name: Build Tracker Controller Plugin
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: latest-stable
+        
+    - name: Show Xcode version
+      run: xcodebuild -version
+      
+    - name: Build Framework
+      run: |
+        cd plugin_tracker
+        chmod +x build_plugin.sh
+        ./build_plugin.sh framework
+        
+    - name: Build Audio Unit Extension
+      run: |
+        cd plugin_tracker
+        ./build_plugin.sh audiounit
+        
+    - name: Build Host App
+      run: |
+        cd plugin_tracker
+        ./build_plugin.sh host
+        
+    - name: Validate Audio Unit
+      run: |
+        cd plugin_tracker
+        ./build_plugin.sh validate
+        
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: tracker-controller-plugin
+        path: |
+          plugin_tracker/build/Output/
+          plugin_tracker/build/DerivedData/Build/Products/Release/
+        retention-days: 30
+        
+    - name: Create Release Archive
+      if: github.ref == 'refs/heads/main'
+      run: |
+        cd plugin_tracker/build/Output
+        zip -r TrackerController-v1.1.0.zip TrackerControllerHost.app TrackerControllerFramework.framework
+        
+    - name: Upload Release Archive
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-artifact@v4
+      with:
+        name: tracker-controller-release
+        path: plugin_tracker/build/Output/TrackerController-v1.1.0.zip
+        retention-days: 90 

@@ -471,7 +471,7 @@ enum TrackerControllerParameter: AUParameterAddress {
         case .patternLength:
             setPatternLength(Int(value))
         case .quantize:
-            setQuantizeEnabled(value > 0.5)
+            updateQuantizeEnabled(value > 0.5)
         }
     }
     
@@ -651,7 +651,7 @@ enum TrackerControllerParameter: AUParameterAddress {
         RTSafeLogger.log("Pattern length set to: %d", level: .info, clampedLength)
     }
     
-    @objc public func setQuantizeEnabled(_ enabled: Bool) {
+    @objc public func updateQuantizeEnabled(_ enabled: Bool) {
         quantizeEnabled = enabled
         midiController.sendQuantize(enabled)
         RTSafeLogger.log("Quantize enabled: %{public}@", level: .info, enabled ? "YES" : "NO")

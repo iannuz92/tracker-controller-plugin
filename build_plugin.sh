@@ -12,7 +12,7 @@ SCHEME_FRAMEWORK="TrackerControllerFramework"
 SCHEME_AU="TrackerControllerAU"
 BUILD_DIR="build"
 CONFIGURATION="Release"
-PLATFORM="macosx"
+PLATFORM="macOS"
 ARCH="arm64"  # Apple Silicon native
 
 # Colors for output
@@ -83,7 +83,7 @@ build_framework() {
         -project "${PROJECT_NAME}.xcodeproj" \
         -scheme "$SCHEME_FRAMEWORK" \
         -configuration "$CONFIGURATION" \
-        -destination "platform=$PLATFORM,arch=$ARCH" \
+        -destination "generic/platform=$PLATFORM" \
         -derivedDataPath "$BUILD_DIR/DerivedData" \
         ARCHS="$ARCH" \
         VALID_ARCHS="$ARCH" \
@@ -106,7 +106,7 @@ build_audio_unit() {
         -project "${PROJECT_NAME}.xcodeproj" \
         -scheme "$SCHEME_AU" \
         -configuration "$CONFIGURATION" \
-        -destination "platform=$PLATFORM,arch=$ARCH" \
+        -destination "generic/platform=$PLATFORM" \
         -derivedDataPath "$BUILD_DIR/DerivedData" \
         ARCHS="$ARCH" \
         VALID_ARCHS="$ARCH" \
@@ -129,7 +129,7 @@ build_host() {
         -project "${PROJECT_NAME}.xcodeproj" \
         -scheme "$SCHEME_HOST" \
         -configuration "$CONFIGURATION" \
-        -destination "platform=$PLATFORM,arch=$ARCH" \
+        -destination "generic/platform=$PLATFORM" \
         -derivedDataPath "$BUILD_DIR/DerivedData" \
         ARCHS="$ARCH" \
         VALID_ARCHS="$ARCH" \

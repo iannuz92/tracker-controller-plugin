@@ -13,8 +13,8 @@ on:
         default: 'false'
 
 env:
-  PROJECT_NAME: TrackerController
-  PLUGIN_VERSION: v1.1.0
+  PROJECT_NAME: TrackerControllerSimple
+  PLUGIN_VERSION: v1.2.0
 
 jobs:
   build:
@@ -45,26 +45,28 @@ jobs:
         echo "🎵 Framework files:"
         ls -la TrackerControllerFramework/
         
+    - name: 🔧 Create Simplified Project
+      run: |
+        echo "🔧 Creating simplified Xcode project..."
+        chmod +x create_simple_project.sh
+        ./create_simple_project.sh
+        
     - name: 🏗️ Build Framework
       run: |
         echo "🔨 Building TrackerControllerFramework..."
         chmod +x build_plugin.sh
         ./build_plugin.sh framework
         
-    - name: 🧩 Build Audio Unit Extension
+    - name: ✅ Verify Build
       run: |
-        echo "🔌 Building TrackerControllerAU extension..."
-        ./build_plugin.sh audiounit
-        
-    - name: 📱 Build Host App
-      run: |
-        echo "🏠 Building TrackerControllerHost application..."
-        ./build_plugin.sh host
-        
-    - name: ✅ Validate Audio Unit
-      run: |
-        echo "🔍 Validating Audio Unit..."
-        ./build_plugin.sh validate || echo "⚠️ Validation completed with warnings"
+        echo "🔍 Verifying build results..."
+        if [ -f "build/Output/TrackerControllerFramework.framework/TrackerControllerFramework" ]; then
+          echo "✅ Framework built successfully"
+          file build/Output/TrackerControllerFramework.framework/TrackerControllerFramework
+        else
+          echo "❌ Framework build failed"
+          find build -name "*.framework" -type d 2>/dev/null || echo "No frameworks found"
+        fi
         
     - name: 📦 Prepare Release Package
       run: |

@@ -41,38 +41,33 @@ jobs:
     - name: 📋 Verify project structure
       run: |
         echo "📁 Project structure:"
-        ls -la plugin_tracker/
+        ls -la
         echo "🎵 Framework files:"
-        ls -la plugin_tracker/TrackerControllerFramework/
+        ls -la TrackerControllerFramework/
         
     - name: 🏗️ Build Framework
       run: |
-        cd plugin_tracker
         echo "🔨 Building TrackerControllerFramework..."
         chmod +x build_plugin.sh
         ./build_plugin.sh framework
         
     - name: 🧩 Build Audio Unit Extension
       run: |
-        cd plugin_tracker
         echo "🔌 Building TrackerControllerAU extension..."
         ./build_plugin.sh audiounit
         
     - name: 📱 Build Host App
       run: |
-        cd plugin_tracker
         echo "🏠 Building TrackerControllerHost application..."
         ./build_plugin.sh host
         
     - name: ✅ Validate Audio Unit
       run: |
-        cd plugin_tracker
         echo "🔍 Validating Audio Unit..."
         ./build_plugin.sh validate || echo "⚠️ Validation completed with warnings"
         
     - name: 📦 Prepare Release Package
       run: |
-        cd plugin_tracker
         echo "📦 Creating release package..."
         
         # Create release directory
@@ -124,7 +119,7 @@ jobs:
         
     - name: 🗜️ Create Release Archive
       run: |
-        cd plugin_tracker/release
+        cd release
         zip -r "../TrackerController-${{ env.PLUGIN_VERSION }}-macOS.zip" .
         echo "📦 Created: TrackerController-${{ env.PLUGIN_VERSION }}-macOS.zip"
         
@@ -149,15 +144,15 @@ jobs:
       with:
         name: tracker-controller-plugin-${{ env.PLUGIN_VERSION }}
         path: |
-          plugin_tracker/release/
-          plugin_tracker/build/DerivedData/Build/Products/Release/
+          release/
+          build/DerivedData/Build/Products/Release/
         retention-days: 30
         
     - name: 📤 Upload Release Archive
       uses: actions/upload-artifact@v4
       with:
         name: tracker-controller-release-${{ env.PLUGIN_VERSION }}
-        path: plugin_tracker/TrackerController-${{ env.PLUGIN_VERSION }}-macOS.zip
+        path: TrackerController-${{ env.PLUGIN_VERSION }}-macOS.zip
         retention-days: 90
         
     - name: 🏷️ Create Release (on main branch)
